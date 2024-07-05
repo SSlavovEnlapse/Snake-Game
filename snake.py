@@ -12,6 +12,7 @@ grass_img_path = os.path.join(base_path, "grass.jpg")
 apple_img_path = os.path.join(base_path, "apple.png")
 background_music_path = os.path.join(base_path, "best-adventure-ever-122726.mp3")
 eat_sound_path = os.path.join(base_path, "plastic-crunch-83779.wav")
+gameover_img_path = os.path.join(base_path, "gameover.png")
 
 # Load assets
 grass_img = pygame.image.load(grass_img_path)
@@ -27,8 +28,8 @@ dis_height = 600
 grass_img = pygame.transform.scale(grass_img, (dis_width, dis_height))
 
 # Resize apple image
-apple_img_width = 20  # Set width for the apple image
-apple_img_height = 20  # Set height for the apple image
+apple_img_width = 30  # Set width for the apple image
+apple_img_height = 30  # Set height for the apple image
 apple_img = pygame.transform.scale(apple_img, (apple_img_width, apple_img_height))
 
 # Start background music
@@ -48,7 +49,7 @@ blue = (50, 153, 213)
 
 # Set snake parameters
 snake_block = 10
-snake_speed = 15
+snake_speed = 35
 
 # Clock
 clock = pygame.time.Clock()
@@ -132,10 +133,9 @@ def gameLoop():
         # Draw the apple
         dis.blit(apple_img, [foodx, foody])
 
-        snake_Head = []
-        snake_Head.append(x1)
-        snake_Head.append(y1)
+        snake_Head = [x1, y1]
         snake_List.append(snake_Head)
+        
         if len(snake_List) > Length_of_snake:
             del snake_List[0]
 
@@ -147,12 +147,13 @@ def gameLoop():
         show_score(score)
         pygame.display.update()
 
-        if x1 == foodx and y1 == foody:
-            foodx = round(random.randrange(0, dis_width - apple_img_width) / 10.0) * 10.0
-            foody = round(random.randrange(0, dis_height - apple_img_height) / 10.0) * 10.0
-            Length_of_snake += 1
-            score += 1
-            eat_sound.play()  # Play sound effect when the snake eats the food
+        if x1 < foodx + apple_img_width and x1 + snake_block > foodx:
+            if y1 < foody + apple_img_height and y1 + snake_block > foody:
+                foodx = round(random.randrange(0, dis_width - apple_img_width) / 10.0) * 10.0
+                foody = round(random.randrange(0, dis_height - apple_img_height) / 10.0) * 10.0
+                Length_of_snake += 1
+                score += 1
+                eat_sound.play()  # Play sound effect when the snake eats the food
 
         clock.tick(snake_speed)
 
